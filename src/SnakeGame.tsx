@@ -13,12 +13,29 @@ const directions: Record<string, Position> = {
   ArrowRight: { x: 1, y: 0 },
 };
 
+const generateRandomFoodPosition = (snake: Position[]): Position => {
+  let newFoodPosition: Position;
+  do {
+    newFoodPosition = {
+      x: Math.floor(Math.random() * boardSize),
+      y: Math.floor(Math.random() * boardSize),
+    };
+  } while (
+    // Keep generating new food positions until one is found that is not on the snake
+    snake.some(
+      (segment) =>
+        segment.x === newFoodPosition.x && segment.y === newFoodPosition.y,
+    )
+  );
+  return newFoodPosition;
+};
+
 const SnakeGame: React.FC = () => {
   const [snake, setSnake] = useState<Position[]>([
     { x: Math.floor(boardSize / 2), y: Math.floor(boardSize / 2) },
   ]);
   const [direction, setDirection] = useState(directions.ArrowRight);
-  const [food, setFood] = useState({ x: 1, y: 1 });
+  const [food, setFood] = useState(generateRandomFoodPosition(snake));
   const [gameOver, setGameOver] = useState(false);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -47,7 +64,10 @@ const SnakeGame: React.FC = () => {
         newHead.x < 0 ||
         newHead.x >= boardSize ||
         newHead.y < 0 ||
-        newHead.y >= boardSize
+        newHead.y >= boardSize ||
+        snake.some(
+          (segment) => segment.x === newHead.x && segment.y === newHead.y,
+        )
       ) {
         setGameOver(true);
         return;
@@ -56,7 +76,7 @@ const SnakeGame: React.FC = () => {
       const newSnake = [newHead, ...snake];
 
       if (newHead.x === food.x && newHead.y === food.y) {
-        setFood({ x: 2, y: 2 });
+        setFood(generateRandomFoodPosition(newSnake));
       } else {
         newSnake.pop();
       }
