@@ -1,10 +1,20 @@
-# Getting Started with Create React App
+# Simple Snake game written in React
+
+This is a simple snake game written in React. The game is played on a 20x20 grid. The snake starts with a length of 1 and moves in right direction. The snake can be controlled using the arrow keys. The snake grows by 1 unit when it eats the food. The game ends when the snake collides with the wall or itself.
+
+This is written in TypeScript and uses React hooks. For styling it uses Styled Components.
+
+![img.png](demo.png)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm install`
+
+Installs the required dependencies for the project.\
 
 ### `npm start`
 
