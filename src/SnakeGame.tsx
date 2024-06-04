@@ -18,6 +18,7 @@ const SnakeGame: React.FC = () => {
     { x: Math.floor(boardSize / 2), y: Math.floor(boardSize / 2) },
   ]);
   const [direction, setDirection] = useState(directions.ArrowRight);
+  const [food, setFood] = useState({ x: 1, y: 1 });
   const [gameOver, setGameOver] = useState(false);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -53,13 +54,20 @@ const SnakeGame: React.FC = () => {
       }
 
       const newSnake = [newHead, ...snake];
+
+      if (newHead.x === food.x && newHead.y === food.y) {
+        setFood({ x: 2, y: 2 });
+      } else {
+        newSnake.pop();
+      }
+
       setSnake(newSnake);
     };
 
     const intervalId = setInterval(moveSnake, 200);
 
     return () => clearInterval(intervalId);
-  }, [snake, direction, gameOver]);
+  }, [snake, direction, gameOver, food]);
 
   return (
     <PageContainer>
@@ -79,6 +87,8 @@ const SnakeGame: React.FC = () => {
               snake.some((segment) => segment.x === x && segment.y === y)
             ) {
               type = "snake";
+            } else if (food.x === x && food.y === y) {
+              type = "food";
             }
             return <Cell key={`${x}-${y}`} type={type} />;
           }),

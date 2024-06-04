@@ -4,7 +4,13 @@ const Cell = styled.div<{ type: string }>`
   width: 20px;
   height: 20px;
   background-color: ${({ type }) =>
-    type === "head" ? "darkgreen" : type === "snake" ? "green" : "white"};
+    type === "head"
+      ? "darkgreen"
+      : type === "snake"
+        ? "green"
+        : type === "food"
+          ? "red"
+          : "white"};
   border: 1px solid #444;
 `;
 
