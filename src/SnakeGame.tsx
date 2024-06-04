@@ -18,6 +18,7 @@ const SnakeGame: React.FC = () => {
     { x: Math.floor(boardSize / 2), y: Math.floor(boardSize / 2) },
   ]);
   const [direction, setDirection] = useState(directions.ArrowRight);
+  const [gameOver, setGameOver] = useState(false);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (directions[e.key]) {
@@ -34,10 +35,22 @@ const SnakeGame: React.FC = () => {
 
   useEffect(() => {
     const moveSnake = () => {
+      if (gameOver) return;
+
       const newHead = {
         x: snake[0].x + direction.x,
         y: snake[0].y + direction.y,
       };
+
+      if (
+        newHead.x < 0 ||
+        newHead.x >= boardSize ||
+        newHead.y < 0 ||
+        newHead.y >= boardSize
+      ) {
+        setGameOver(true);
+        return;
+      }
 
       const newSnake = [newHead, ...snake];
       setSnake(newSnake);
@@ -46,11 +59,13 @@ const SnakeGame: React.FC = () => {
     const intervalId = setInterval(moveSnake, 200);
 
     return () => clearInterval(intervalId);
-  }, [snake, direction]);
+  }, [snake, direction, gameOver]);
 
   return (
     <PageContainer>
       <h1>Snake Game</h1>
+      {gameOver ? <h2>Game Over</h2> : null}
+      {gameOver ? <h2>Score: {snake.length - 1}</h2> : null}
       <p>Use the arrow keys to move the snake</p>
       <p>Don't hit the walls or yourself!</p>
       <p>Refresh the page to restart the game</p>
